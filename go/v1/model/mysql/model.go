@@ -3,11 +3,10 @@ package mysql
 import (
 	m "../"
 	"log"
-	"os"
 )
 
-func NewModels(connection *Connection) *m.Models {
+func NewModels(connection *Connection, logger *log.Logger) *m.Models {
 	return &m.Models{
-		Logger: log.New(os.Stdout, "logger:", log.Lshortfile),
+		Logger: logger,
 	}
 }

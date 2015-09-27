@@ -1,17 +1,20 @@
 package main
 
 import (
+	"./logger"
 	"./v1"
 	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
+	"log"
 	"net"
 	"net/http"
 )
 
 func main() {
+	logWriter := logger.NewLogWriter("log")
 	r := mux.NewRouter()
-	err := v1.InitRouter(r)
+	err := v1.InitRouter(r, log.New(logWriter, "logger:", log.Lshortfile))
 	if err != nil {
 		fmt.Printf("Failed to init server : %s", err)
 		return
@@ -27,6 +30,7 @@ func main() {
 		fmt.Printf("Failed to call net.Listen : %s", err)
 		return
 	}
+	go logger.RotateLoop(logWriter)
 	fmt.Println("server is running on 9001")
 	//err = fcgi.Serve(l, r)
 	err = http.Serve(l, r)
