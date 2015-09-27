@@ -1,6 +1,7 @@
 package main
 
 import (
+	"./v1"
 	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
@@ -10,13 +11,11 @@ import (
 
 func main() {
 	r := mux.NewRouter()
-	/*
-		err := v1.InitRouter(r)
-		if err != nil {
-			fmt.Printf("Failed to init server : %s", err)
-			return
-		}
-	*/
+	err := v1.InitRouter(r)
+	if err != nil {
+		fmt.Printf("Failed to init server : %s", err)
+		return
+	}
 	var standalone *bool = flag.Bool("standalone", false, "if true, runs standalone mode")
 	flag.Parse()
 
