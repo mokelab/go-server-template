@@ -27,6 +27,7 @@ func main() {
 		fmt.Printf("Failed to call net.Listen : %s", err)
 		return
 	}
+	fmt.Println("server is running on 9001")
 	//err = fcgi.Serve(l, r)
 	err = http.Serve(l, r)
 	if err != nil {

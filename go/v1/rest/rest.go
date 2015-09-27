@@ -1,6 +1,7 @@
 package rest
 
 import (
+	s "../service"
 	"fmt"
 	"github.com/fukata/golang-stats-api-handler"
 	"github.com/gorilla/mux"
@@ -16,7 +17,7 @@ const (
 
 type handler func(http.ResponseWriter, *http.Request)
 
-func SetHandlers(r *mux.Router /*, services s.Services */) {
+func SetHandlers(r *mux.Router, services s.Services) {
 	r.HandleFunc("/stats", getStats()).
 		Methods("POST")
 	/*
