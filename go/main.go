@@ -1,20 +1,23 @@
 package main
 
 import (
-	"./logger"
 	"./v1"
 	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/mokelab-go/hupwriter"
 	"log"
 	"net"
 	"net/http"
 )
 
+const (
+	AppName = "myapp"
+)
+
 func main() {
-	logWriter := logger.NewLogWriter("log")
 	r := mux.NewRouter()
-	err := v1.InitRouter(r, log.New(logWriter, "logger:", log.Lshortfile))
+	err := v1.InitRouter(r, log.New(hupwriter.New("/var/log/"+AppName+".log", "/var/pid/"+AppName+".pid"), "logger:", log.Lshortfile))
 	if err != nil {
 		fmt.Printf("Failed to init server : %s", err)
 		return
@@ -30,7 +33,7 @@ func main() {
 		fmt.Printf("Failed to call net.Listen : %s", err)
 		return
 	}
-	go logger.RotateLoop(logWriter)
+
 	fmt.Println("server is running on 9001")
 	//err = fcgi.Serve(l, r)
 	err = http.Serve(l, r)
