@@ -4,6 +4,7 @@ import (
 	"./v1"
 	"flag"
 	"fmt"
+	"github.com/fukata/golang-stats-api-handler"
 	"github.com/gorilla/mux"
 	"github.com/mokelab-go/hupwriter"
 	"log"
@@ -28,6 +29,9 @@ func main() {
 	if *standalone {
 		initStandalone(r)
 	}
+
+	initStatAPI(r)
+
 	l, err := net.Listen("tcp", ":9001")
 	if err != nil {
 		fmt.Printf("Failed to call net.Listen : %s", err)
@@ -44,4 +48,16 @@ func main() {
 
 func initStandalone(r *mux.Router) {
 	r.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("../web/"))))
+}
+
+func initStatAPI(r *mux.Router) {
+	r.HandleFunc("/stats", func(w http.ResponseWriter, r *http.Request) {
+		authorization := r.Header.Get("authorization")
+		if authorization != "bearer bLuNUD44a5TUcMVBFczTQnyDQxk3ALiuSxAN2ZwxzRUYUc5m" {
+			w.WriteHeader(401)
+			fmt.Fprintf(w, "Not authorized")
+			return
+		}
+		stats_api.Handler(w, r)
+	}).Methods("GET")
 }
